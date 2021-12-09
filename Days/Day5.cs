@@ -1,39 +1,30 @@
 class Day5 {
-    static string FILE_NAME = "Input/input5.txt";
-    static string TEST_FILE_NAME = "Input/input5sample.txt";
-
-    public static void Part1(bool test = false) {
-        StreamReader sr = (test) ? new StreamReader(TEST_FILE_NAME) : new StreamReader(FILE_NAME);
-
-        Map map = new Map(test);
+    public static void Part1(StreamReader sr) {
+        Map map = new Map();
         for(string line = sr.ReadLine(); line != null; line = sr.ReadLine()) {
             string[] data = line.Split(" -> ");
             string[] start = data[0].Split(",");
             string[] end = data[1].Split(",");
 
-            map.MapVent(Int16.Parse(start[0]), Int16.Parse(start[1]), Int16.Parse(end[0]), Int16.Parse(end[1]), false);
+            map.MapVent(int.Parse(start[0]), int.Parse(start[1]), int.Parse(end[0]), int.Parse(end[1]), false);
         }
 
-        if(test)
-            map.PrintMap();
+        //map.PrintMap();
     
         Console.WriteLine("The maps score is: {0}", map.GetScore());
     }
 
-    public static void Part2(bool test = false) {
-        StreamReader sr = (test) ? new StreamReader(TEST_FILE_NAME) : new StreamReader(FILE_NAME);
-
-        Map map = new Map(test);
+    public static void Part2(StreamReader sr) {
+        Map map = new Map();
         for(string line = sr.ReadLine(); line != null; line = sr.ReadLine()) {
             string[] data = line.Split(" -> ");
             string[] start = data[0].Split(",");
             string[] end = data[1].Split(",");
 
-            map.MapVent(Int16.Parse(start[0]), Int16.Parse(start[1]), Int16.Parse(end[0]), Int16.Parse(end[1]), true);
+            map.MapVent(int.Parse(start[0]), int.Parse(start[1]), int.Parse(end[0]), int.Parse(end[1]), true);
         }
 
-        if(test)
-            map.PrintMap();
+        //map.PrintMap();
     
         Console.WriteLine("The maps score is: {0}", map.GetScore());
     }
@@ -42,12 +33,9 @@ class Day5 {
 class Map {
     private int[,] map;
     private int score;
-    private bool test;
 
-    public Map(bool test) {
-        this.test = test;
-        int size = (test) ? 10 : 1000;
-        this.map = new int[size,size];
+    public Map() {
+        this.map = new int[1000, 1000];
         this.score = 0;
     }
 
@@ -61,11 +49,11 @@ class Map {
 
             for(int i = start; i <= end; i++) {
                 if(x) {
-                    if(map[i,y0]++ == 1) {
+                    if(map[i, y0]++ == 1) {
                         score++;
                     }
                 } else {
-                    if(map[x0,i]++ == 1) {
+                    if(map[x0, i]++ == 1) {
                         score++;
                     }
                 }
@@ -91,7 +79,7 @@ class Map {
     public void PrintMap() {
         for(int i = 0; i < map.GetLength(0); i++) {
             for(int j = 0; j < map.GetLength(1); j++) {
-                Console.Write("{0} ", map[j,i]);
+                Console.Write("{0}", map[j,i]);
             }
             Console.Write("\n");
         }

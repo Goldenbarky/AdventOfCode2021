@@ -1,15 +1,25 @@
 ﻿class Program {
 
+    static string FILE_NAME = "Input/input{0}.txt";
+    static string TEST_FILE_NAME = "Input/input{0}sample.txt";
+
     public static void Main(String[] args) {
-        Type type = Type.GetType(String.Concat("Day",args[0]));
-        var method = type.GetMethod(String.Concat("Part", args[1]));
-        object[] test;
+
+        string day = args[0];
+        string part = args[1];
+
+        Type type = Type.GetType(String.Concat("Day", day));
+        var method = type.GetMethod(String.Concat("Part", part));
+        StreamReader sr = null;
         if(args.Count() >= 3 && args[2] == "test")
-            test = new object[] {true};
+            sr = new StreamReader(string.Format(TEST_FILE_NAME, day));
         else {
-            test = new object[] {false};
+            sr = new StreamReader(string.Format(FILE_NAME, day));
         }
-        method.Invoke(null, test);
+
+        object[] arguments = {sr};
+
+        method.Invoke(null, arguments);
     }
 
     public static int[] StringArrayToInt(string[] input) {

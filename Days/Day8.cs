@@ -1,11 +1,6 @@
 using System.Collections;
 class Day8 {
-    static string FILE_NAME = "Input/input8.txt";
-    static string TEST_FILE_NAME = "Input/input8sample.txt";
-
-    public static void Part1(bool test = false) {
-        StreamReader sr = (test) ? new StreamReader(TEST_FILE_NAME) : new StreamReader(FILE_NAME);
-
+    public static void Part1(StreamReader sr) {
         int[] numDigits = new int[4];
 
         for(string line = sr.ReadLine(); line != null; line = sr.ReadLine()) {
@@ -35,9 +30,7 @@ class Day8 {
         Console.WriteLine("2: {0}\n4: {1}\n7: {2}\n8: {3}\nsum: {4}", numDigits[0], numDigits[1], numDigits[2], numDigits[3], numDigits.Sum());
     }
 
-    public static void Part2(bool test = false) {
-        StreamReader sr = (test) ? new StreamReader(TEST_FILE_NAME) : new StreamReader(FILE_NAME);
-
+    public static void Part2(StreamReader sr) {
         int sum = 0;
 
         for(string line = sr.ReadLine(); line != null; line = sr.ReadLine()) {

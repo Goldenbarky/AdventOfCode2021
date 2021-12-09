@@ -1,10 +1,5 @@
 class Day6 {
-    static string FILE_NAME = "Input/input6.txt";
-    static string TEST_FILE_NAME = "Input/input6sample.txt";
-
-    public static void Part1(bool test = false) {
-        StreamReader sr = (test) ? new StreamReader(TEST_FILE_NAME) : new StreamReader(FILE_NAME);
-
+    public static void Part1(StreamReader sr) {
         string[] data = sr.ReadLine().Split(",");
         Int64[] fish = new Int64[data.Count()];
 
@@ -19,9 +14,7 @@ class Day6 {
         Console.WriteLine("After 80 days there are {0} fish.", tank.GetNumOfFish());
     }
 
-    public static void Part2(bool test = false) {
-        StreamReader sr = (test) ? new StreamReader(TEST_FILE_NAME) : new StreamReader(FILE_NAME);
-
+    public static void Part2(StreamReader sr) {
         string[] data = sr.ReadLine().Split(",");
         Int64[] fish = new Int64[data.Count()];
 

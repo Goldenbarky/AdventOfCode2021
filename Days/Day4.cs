@@ -1,11 +1,7 @@
 using System.Collections;
 
 class Day4 {
-    static string FILE_NAME = "Input/input4.txt";
-    static string TEST_FILE_NAME = "Input/input4sample.txt";
-    public static void Part1(bool test = false) {
-        StreamReader sr = (test) ? new StreamReader(TEST_FILE_NAME) : new StreamReader(FILE_NAME);
-
+    public static void Part1(StreamReader sr) {
         string[] numbers = sr.ReadLine().Split(",");
 
         sr.ReadLine();
@@ -27,9 +23,7 @@ class Day4 {
         Console.WriteLine("Oh boy, something went wrong");
     }
 
-    public static void Part2(bool test = false) {
-        StreamReader sr = (test) ? new StreamReader(TEST_FILE_NAME) : new StreamReader(FILE_NAME);
-
+    public static void Part2(StreamReader sr) {
         string[] numbers = sr.ReadLine().Split(",");
 
         sr.ReadLine();

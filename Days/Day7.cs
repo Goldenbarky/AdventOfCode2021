@@ -1,27 +1,16 @@
 class Day7 {
-    static string FILE_NAME = "Input/input7.txt";
-    static string TEST_FILE_NAME = "Input/input7sample.txt";
-
-    public static void Part1(bool test = false) {
-        StreamReader sr = (test) ? new StreamReader(TEST_FILE_NAME) : new StreamReader(FILE_NAME);
-
+    public static void Part1(StreamReader sr) {
         int[] crabs = Program.StringArrayToInt(sr.ReadLine().Split(","));
 
-        int window = (test) ? 20 : 2000;
-
-        double bestDepth = FindBestDepth(crabs, window, window/2, false);
+        double bestDepth = FindBestDepth(crabs, 2000, 1000, false);
 
         Console.WriteLine("Best depth is {0} with a score of {1}", bestDepth, GetDepthScore(crabs, (int) bestDepth, false));
     }
 
-    public static void Part2(bool test = false) {
-        StreamReader sr = (test) ? new StreamReader(TEST_FILE_NAME) : new StreamReader(FILE_NAME);
+    public static void Part2(StreamReader sr) {
+    int[] crabs = Program.StringArrayToInt(sr.ReadLine().Split(","));
 
-        int[] crabs = Program.StringArrayToInt(sr.ReadLine().Split(","));
-
-        int window = (test) ? 20 : 2000;
-
-        double bestDepth = FindBestDepth(crabs, window, window/2, true);
+        double bestDepth = FindBestDepth(crabs, 2000, 1000, true);
 
         Console.WriteLine("Best depth is {0} with a score of {1}", bestDepth, GetDepthScore(crabs, (int) bestDepth, true));
     }

@@ -1,10 +1,7 @@
 using System.Collections;
 
 class Day3 {
-    static String FileName = "Input/input3.txt";
-    public static void Part1() {
-        StreamReader sr = new StreamReader(FileName);
-
+    public static void Part1(StreamReader sr) {
         int[] sumOfBits = new int[12];
         for(String line = sr.ReadLine(); line != null; line = sr.ReadLine()) {
             for(int i = 0; i < line.Length; i++) {
@@ -35,9 +32,7 @@ class Day3 {
         Console.WriteLine("Final power consumption: {0} * {1} = {2}", gamma, epsilon, gamma * epsilon);
     }
 
-    public static void Part2() {
-        StreamReader sr = new StreamReader(FileName);
-
+    public static void Part2(StreamReader sr) {
         ArrayList dataSet = new ArrayList();
 
         for(String line = sr.ReadLine(); line != null; line = sr.ReadLine()) {

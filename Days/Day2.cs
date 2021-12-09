@@ -1,10 +1,6 @@
 ﻿class Day2 {
 
-    static String FileName = "Input/input2.txt";
-
-    public static void Part1(){
-        StreamReader sr = new StreamReader(FileName);
-
+    public static void Part1(StreamReader sr){
         int posX = 0;
         int posY = 0;
 
@@ -34,9 +30,7 @@
         Console.WriteLine("Answer is: {0}", posX * posY);
     }
 
-    public static void Part2(){
-        StreamReader sr = new StreamReader(FileName);
-
+    public static void Part2(StreamReader sr){
         int posX = 0;
         int posY = 0;
         int aim = 0;

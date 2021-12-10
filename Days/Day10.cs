@@ -104,11 +104,11 @@ class Day10 {
                 incomplete.Add(syntax);
         }
 
-        List<Int64> scores = new List<Int64>();
+        List<long> scores = new List<long>();
         foreach(string line in incomplete) {
             List<char> syntax = line.Reverse().ToList();
 
-            Int64 score = 0;
+            long score = 0;
             foreach(char ch in syntax) {
                 score *= 5;
 
@@ -135,7 +135,7 @@ class Day10 {
 
         scores.ForEach(x=>Console.WriteLine(x));
 
-        Int64 winner = scores[scores.Count / 2];
+        long winner = scores[scores.Count / 2];
 
         Console.WriteLine(winner);
     }

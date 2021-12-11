@@ -11,7 +11,7 @@ class Day11 {
         }
 
         int totalFlashes = 0;
-        for(int round = 1; round <= 100; round++) {
+        for(int round = 1; round <= 10; round++) {
             int flashes = 0;
             for(int i = 0; i < map.Count(); i++) {
                 for(int j = 0; j < map[i].Count(); j++) {
@@ -50,8 +50,8 @@ class Day11 {
                     int octopus = map[x + i][y + j];
 
                     if(octopus != 0)
-                        octopus = map[x+i][y+j]++;
-                    if(octopus >= 9)
+                        octopus = ++map[x+i][y+j];
+                    if(octopus > 9)
                         totalFlashes += FlashOctopus(x+i, y+j, map);
                 }
             }
@@ -63,7 +63,7 @@ class Day11 {
     public static void PrintMap(List<List<int>> map) {
         for(int i = 0; i < map.Count(); i++) {
                 for(int j = 0; j < map[i].Count(); j++) {
-                    Console.Write(map[i][j]);
+                    Console.Write("{0} ", map[i][j]);
                 }
                 Console.WriteLine();
             }

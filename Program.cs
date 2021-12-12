@@ -10,16 +10,22 @@
 
         Type type = Type.GetType(String.Concat("Day", day));
         var method = type.GetMethod(String.Concat("Part", part));
-        StreamReader sr = null;
-        if(args.Count() >= 3 && args[2] == "test")
-            sr = new StreamReader(string.Format(TEST_FILE_NAME, day));
-        else {
-            sr = new StreamReader(string.Format(FILE_NAME, day));
+        string fileName = string.Format(
+            args.Length >= 3 && args[2] == "test"
+                ? TEST_FILE_NAME
+                : FILE_NAME,
+            day
+        );
+        
+        try {
+            StreamReader sr = new StreamReader(fileName);
+            object[] arguments = {sr};
+
+            method.Invoke(null, arguments);
+        } catch(FileNotFoundException) {
+            Console.WriteLine($"Oops! File {fileName} does not exist yet");
+            return;
         }
-
-        object[] arguments = {sr};
-
-        method.Invoke(null, arguments);
     }
 
     public static int[] StringArrayToInt(string[] input) {

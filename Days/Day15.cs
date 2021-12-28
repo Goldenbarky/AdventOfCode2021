@@ -9,17 +9,36 @@ class Day15 {
         PriorityQueue<Block, int> paths = new PriorityQueue<Block, int>();
         paths.Enqueue(map[0,0], 0);
 
-        PrintMap(map, false);
+        //PrintMap(map, false);
+
+        Console.WriteLine("Finding best path...");
 
         Dijkstras(map, paths);
 
         PrintMap(map, true);
 
-        Console.WriteLine($"The best path is valued at {map[9,9].value}");
+        Console.WriteLine($"The best path is valued at {map[map.GetLength(0) - 1, map.GetLength(1) - 1].value}");
     }
 
     public static void Part2(StreamReader sr) {
-        
+        Block[,] map = ReadInput(sr);
+
+        //PrintMap(map, false);
+
+        map = MultiplyMap(map);
+
+        //PrintMap(map, false);
+
+        PriorityQueue<Block, int> paths = new PriorityQueue<Block, int>();
+        paths.Enqueue(map[0,0], 0);
+
+        map[0,0].value = 0;
+
+        Dijkstras(map, paths);
+
+        //PrintMap(map, true);
+
+        Console.WriteLine($"The best path is valued at {map[map.GetLength(0) - 1, map.GetLength(1) - 1].value}");
     }
 
     public static Block[,] ReadInput(StreamReader sr) {
@@ -39,6 +58,9 @@ class Day15 {
     public static void Dijkstras(Block[,] map, PriorityQueue<Block, int> paths) {
         while(paths.Count > 0) {
             Block node = paths.Dequeue();
+            if(node.visited) 
+                continue;
+
             node.visited = true;
 
             for(int i = -1; i <= 1; i++) {
@@ -48,9 +70,9 @@ class Day15 {
                         if(x + i >= 0 && x + i < map.GetLength(0) && y + j >= 0 && y + j < map.GetLength(1) && !map[x+i,y+j].visited) {
                             Block nextNode = map[x+i,y+j];
                             nextNode.value = Math.Min(nextNode.value, node.value + nextNode.weight);
-                            if(x+i == map.GetLength(0) - 1 && y + j == map.GetLength(1)) break;
+                            if(x+i == map.GetLength(0) - 1 && y + j == map.GetLength(1) - 1) 
+                                return;
                             paths.Enqueue(nextNode, nextNode.value);
-                            //Console.WriteLine("Mapped a point");
                         }
                     }
                 }
@@ -62,10 +84,33 @@ class Day15 {
         for(int i = 0; i < map.GetLength(0); i++) {
             for(int j = 0; j < map.GetLength(1); j++) {
                 if(drawWeighted) Console.Write($"{map[i,j].value} ");
-                else Console.Write(map[i,j].weight);
+                else Console.Write($"{map[i,j].weight} ");
             }
             Console.WriteLine();
         }
+    }
+
+    public static Block[,] MultiplyMap(Block[,] map) {
+        Block[,] bigMap = new Block[map.GetLength(0) * 5, map.GetLength(1) * 5];
+
+        for(int i = 0; i < map.GetLength(0); i++) {
+            for(int j = 0; j < map.GetLength(1); j++) {
+                Block currNode = map[i,j];
+
+                for(int k = 0; k < 5; k++) {
+                    for(int l = 0; l < 5; l++) {
+                        int newValue = (map[i,j].weight + k + l) % 10 + ((map[i,j].weight + k + l) / 10);
+                        
+                        Block newBlock = new Block(newValue, (map.GetLength(0) * k) + i, (map.GetLength(1) * l) + j);
+                        var (x, y) = newBlock.coords;
+
+                        bigMap[x, y] = newBlock;
+                    }
+                }
+            }
+        }
+
+        return bigMap;
     }
 }
 

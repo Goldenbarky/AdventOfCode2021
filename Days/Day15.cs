@@ -1,25 +1,53 @@
+using System.Collections;
+
 class Day15 {
     public static void Part1(StreamReader sr) {
-        int[,] map = ReadInput(sr);
+        Block[,] map = ReadInput(sr);
 
-        PrintMap(map);
+        map[0,0].value = 0;
 
-        int score = FindBestPath(0, 0, map, 0, int.MaxValue, true);
+        PriorityQueue<Block, int> paths = new PriorityQueue<Block, int>();
+        paths.Enqueue(map[0,0], 0);
 
-        Console.WriteLine($"The best path is valued at {score}");
+        //PrintMap(map, false);
+
+        Console.WriteLine("Finding best path...");
+
+        Dijkstras(map, paths);
+
+        PrintMap(map, true);
+
+        Console.WriteLine($"The best path is valued at {map[map.GetLength(0) - 1, map.GetLength(1) - 1].value}");
     }
 
     public static void Part2(StreamReader sr) {
-        
+        Block[,] map = ReadInput(sr);
+
+        //PrintMap(map, false);
+
+        map = MultiplyMap(map);
+
+        //PrintMap(map, false);
+
+        PriorityQueue<Block, int> paths = new PriorityQueue<Block, int>();
+        paths.Enqueue(map[0,0], 0);
+
+        map[0,0].value = 0;
+
+        Dijkstras(map, paths);
+
+        //PrintMap(map, true);
+
+        Console.WriteLine($"The best path is valued at {map[map.GetLength(0) - 1, map.GetLength(1) - 1].value}");
     }
 
-    public static int[,] ReadInput(StreamReader sr) {
+    public static Block[,] ReadInput(StreamReader sr) {
         string line = sr.ReadLine();
-        int[,] map = new int[line.Length, line.Length];
+        Block[,] map = new Block[line.Length, line.Length];
 
         for(int i = 0; line != null && i < line.Length; i++) {
             for(int j = 0; j < line.Length; j++) {
-                map[i,j] = int.Parse(line.Substring(j, 1));
+                map[i,j] = new Block(int.Parse(line.Substring(j,1)), i, j);
             }
             line = sr.ReadLine();
         }
@@ -27,40 +55,79 @@ class Day15 {
         return map;
     }
 
-    public static int FindBestPath(int x, int y, int[,] map, int score, int bestScore, bool alternate) {
-        if(x >= 0 && x < map.GetLength(0) && y >= 0 && y < map.GetLength(1)) {
-            score += map[x,y];
+    public static void Dijkstras(Block[,] map, PriorityQueue<Block, int> paths) {
+        while(paths.Count > 0) {
+            Block node = paths.Dequeue();
+            if(node.visited) 
+                continue;
 
-            if((x+1) * (y+1) == map.Length) {
-                return score;
-            } else if(score >= bestScore) {
-                return int.MaxValue;
-            } else {
-                bestScore = (alternate) 
-                    ? Math.Min(FindBestPath(x, y+1, map, score, bestScore, !alternate), bestScore)
-                    : Math.Min(FindBestPath(x+1, y, map, score, bestScore, !alternate), bestScore);
-                bestScore = (!alternate)
-                    ? Math.Min(FindBestPath(x, y+1, map, score, bestScore, !alternate), bestScore)
-                    : Math.Min(FindBestPath(x+1, y, map, score, bestScore, !alternate), bestScore);
-                
-                //Left case just in case
-                bestScore = Math.Min(FindBestPath(x-1, y, map, score, bestScore, !alternate), bestScore);
-                //Up case just to check
-                bestScore = Math.Min(FindBestPath(x, y-1, map, score, bestScore, !alternate), bestScore);
+            node.visited = true;
 
-                return bestScore;
+            for(int i = -1; i <= 1; i++) {
+                for(int j = -1; j <= 1; j++) {
+                    if(Math.Abs(i) != Math.Abs(j)) {
+                        var (x, y) = node.coords;
+                        if(x + i >= 0 && x + i < map.GetLength(0) && y + j >= 0 && y + j < map.GetLength(1) && !map[x+i,y+j].visited) {
+                            Block nextNode = map[x+i,y+j];
+                            nextNode.value = Math.Min(nextNode.value, node.value + nextNode.weight);
+                            if(x+i == map.GetLength(0) - 1 && y + j == map.GetLength(1) - 1) 
+                                return;
+                            paths.Enqueue(nextNode, nextNode.value);
+                        }
+                    }
+                }
             }
-        } else {
-            return int.MaxValue;
         }
     }
 
-    public static void PrintMap(int[,] map) {
+    public static void PrintMap(Block[,] map, bool drawWeighted) {
         for(int i = 0; i < map.GetLength(0); i++) {
             for(int j = 0; j < map.GetLength(1); j++) {
-                Console.Write(map[i,j]);
+                if(drawWeighted) Console.Write($"{map[i,j].value} ");
+                else Console.Write($"{map[i,j].weight} ");
             }
             Console.WriteLine();
         }
+    }
+
+    public static Block[,] MultiplyMap(Block[,] map) {
+        Block[,] bigMap = new Block[map.GetLength(0) * 5, map.GetLength(1) * 5];
+
+        for(int i = 0; i < map.GetLength(0); i++) {
+            for(int j = 0; j < map.GetLength(1); j++) {
+                Block currNode = map[i,j];
+
+                for(int k = 0; k < 5; k++) {
+                    for(int l = 0; l < 5; l++) {
+                        int newValue = (map[i,j].weight + k + l) % 10 + ((map[i,j].weight + k + l) / 10);
+                        
+                        Block newBlock = new Block(newValue, (map.GetLength(0) * k) + i, (map.GetLength(1) * l) + j);
+                        var (x, y) = newBlock.coords;
+
+                        bigMap[x, y] = newBlock;
+                    }
+                }
+            }
+        }
+
+        return bigMap;
+    }
+}
+
+class Block : IComparable {
+    public int weight;
+    public int value;
+    public bool visited;
+    public (int, int) coords;
+
+    public Block(int weight, int x, int y) {
+        this.weight = weight;
+        this.value = int.MaxValue;
+        this.visited = false;
+        this.coords = (x, y);
+    }
+
+    public int CompareTo(object obj) {
+        return this.value.CompareTo(((Block)obj).value);
     }
 }

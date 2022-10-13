@@ -3,13 +3,13 @@
     static string FILE_NAME = "Input/input{0}.txt";
     static string TEST_FILE_NAME = "Input/input{0}sample.txt";
 
-    public static void Main(String[] args) {
+    public static void Main(string[] args) {
 
         string day = args[0];
         string part = args[1];
 
-        Type type = Type.GetType(String.Concat("Day", day));
-        var method = type.GetMethod(String.Concat("Part", part));
+        Type type = Type.GetType(string.Concat("Day", day));
+        var method = type.GetMethod(string.Concat("Part", part));
         string fileName = string.Format(
             args.Length >= 3 && args[2] == "test"
                 ? TEST_FILE_NAME
